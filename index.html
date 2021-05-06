@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <title>Dictionary</title>
+  </head>
+  <body>
+    
+    <form class="form text-center my-5"  width=80%>
+      <div class="m-5">
+        <label class="form-label">Please Enter a Word</label>
+        <input type="text" class="form-control text-center" autocomplete="off" id="word">
+      <button class='btn btn-primary mt-3' type="submit">submit</button>
+    </form>
+
+    <div class="text-center mt-5">
+      <p id='definition'></p>
+      <div class="examples"></div>
+    </div>
+        
+    </ul>
+    <script>
+        document.querySelector('.form').addEventListener('submit', (e)=>{
+        
+        e.preventDefault();
+        const word = document.querySelector('#word').value;
+        const url = `http://localhost:5000/${word}`
+        
+        let def = document.querySelector('#definition')
+        let examples = document.querySelector('.examples')
+
+        examples.innerHTML = ''
+
+        fetch(url,{method:'GET', mode: 'cors'}).then(res=>res.json()).then((data)=>{
+            def.innerHTML = "Definition: " + data.results[0].lexicalEntries[0].entries[0].senses[0].definitions
+
+            let x = data.results[0].lexicalEntries[0].entries[0].senses[0].examples.forEach(element => {
+                examples.innerHTML += (`<li>${element.text}</li>`)
+            })
+            
+        })
+        document.querySelector('#word').value = '';
+        })
+    </script>
+  </body>
+</html>
